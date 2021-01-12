@@ -5,12 +5,19 @@ Celui-ci est conteneurisé avec Docker afin de router seulement le traffic du po
 
 Une stack **docker-compose** est utilisée avec 2 services : OpenVPN (connexion VPN à l'Ensimag) et NodeJS pour faire tourner l'API et router ses requêtes au service OpenVPN.
 
-*(English version)*
+_(English version)_
 
 This project allows Ensimag (Grenoble, France) alternating students to identify themselves as being present during classes.
 It is containerized with Docker to route only its traffic through the Ensimag VPN without forcing the entire server to use the VPN.
 
 A **docker-compose** stack is used, running 2 services: OpenVPN (Ensimag VPN connection) and NodeJS to run the API and route its requests to the OpenVPN service.
+
+## Endpoints
+
+|  Endpoint   | HTTP request method | Parameters                                                            | Description                                                                                                                                                           |
+| :---------: | :-----------------: | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/courses`  |         GET         | None                                                                  | Returns the list of the current courses (let `now` be the current time in minutes, a certain course `c` will be listed if `c.start - 15 <= now && c.end + 15 >= now`) |
+| `/check-in` |        POST         | `{ courseID: "<the course ID to validate>", username: "<username>" }` | Checks in for the course `courseID` with for the user `username`                                                                                                      |
 
 ## Setup/Installation
 
@@ -42,7 +49,7 @@ chmod 0 creds
 sudo chown root:root creds
 ```
 
-*Please note that the `creds` file should have the username on the first line and the password on the second one.*
+_Please note that the `creds` file should have the username on the first line and the password on the second one._
 
 We are now ready to build the OpenVPN container:
 
