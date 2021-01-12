@@ -36,7 +36,7 @@ URL="https://intranet.ensimag.grenoble-inp.fr/medias/fichier/ensimag-vpn-etu-udp
 curl -o ensimag.ovpn $URL
 ```
 
-Finally, create a `creds` file (no extension) containing your crendentials (username + password) for both the VPN connection and the HTTP Basic Auth.
+Now, create a `creds` file (no extension) containing your crendentials (username + password) for both the VPN connection and the HTTP Basic Auth.
 We will also optionally make it only readable by root so that no one will be able to read it without root access on your machine:
 
 ```sh
@@ -57,6 +57,12 @@ We are now ready to build the OpenVPN container:
 ./assiduite build
 # Or, if you chose to restrict creds access to root before (root permission is only needed for the build):
 sudo ./assiduite build
+```
+
+Finally, install the Node.js dependencies:
+
+```
+cd api && yarn && cd ..
 ```
 
 ## Run it!
