@@ -1,0 +1,53 @@
+#!/bin/bash
+set -e
+
+function start() {
+	docker-compose up -d
+}
+
+function stop() {
+	docker-compose stop
+}
+
+function restart() {
+	stop
+	start
+}
+
+function build() {
+	docker-compose build
+}
+
+function upgrade() {
+	stop
+	docker-compose pull
+	docker-compose up -d --remove-orphans
+}
+
+function run_cli() {
+	docker-compose exec node sh
+}
+
+case $1 in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+	build)
+		build
+		;;
+	upgrade)
+		upgrade
+		;;
+	cli)
+		run_cli
+		;;
+	*)
+		echo "Commande invalide !"
+		;;
+esac

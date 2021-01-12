@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  openvpn:
+    build:
+      context: .
+      dockerfile: openvpn.Dockerfile
+    ports:
+      # assiduite NodeJS port (routed to this container)
+      - 3000:3000
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    restart: always
+
+  node:
+    build:
+      context: .
+      dockerfile: node.Dockerfile
+    network_mode: "service:openvpn"
+    user: "node"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./api:/api
+    command: "yarn start"
+    depends_on:
+      - openvpn
+    restart: always

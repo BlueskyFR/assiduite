@@ -1,0 +1,9 @@
+{
+  // Assiduite intranet url
+  url: "https://extranet.ensimag.fr/assiduite",
+  checkInUrl: "https://extranet.ensimag.fr/assiduite/pointage/groupe",
+  // In the Docker container, the creds file is placed at /creds, with chmod 400
+  credsFile: "/creds",
+  // The port the API (express) will listen to
+  listenPort: 3000,
+}

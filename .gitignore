@@ -1,0 +1,4 @@
+# Credentials
+creds
+*.ovpn
+api/node_modules
