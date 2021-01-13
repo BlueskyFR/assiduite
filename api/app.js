@@ -22,6 +22,26 @@ const creds = readCreds();
 // Import the assiduiteParser module by passing it the config and the creds
 const assiduite = require("./assiduiteParser")(config, creds);
 
+// Caching utility
+let cacheList = {};
+/// fn: callback/function to cache
+/// uniqueID: a unique ID that identifies that function
+/// cacheDelay: cache delay, in ms
+async function cache({ uniqueID, cacheDelay, fn }) {
+  if (uniqueID === undefined || !cacheDelay || !fn)
+    throw new Error("Invalid or missing parameter(s)");
+
+  if (!(uniqueID in cacheList) || Date.now() - cacheList[uniqueID].lastCacheTime >= cacheDelay) {
+    // If cache never called or already exists but delay has expired
+    cacheList[uniqueID] = {
+      cacheData: await fn(),
+      lastCacheTime: Date.now(),
+    };
+  }
+
+  return cacheList[uniqueID].cacheData;
+}
+
 // Parses application/json
 app.use(express.json());
 
@@ -32,7 +52,15 @@ app.get("/", (_, res) => {
   );
 });
 
-app.get("/courses", async (_, res) => res.json(await assiduite.listCourses()));
+app.get("/courses", async (_, res) =>
+  res.json(
+    await cache({
+      uniqueID: "courses",
+      cacheDelay: 10000,
+      fn: async () => await assiduite.listCourses(),
+    })
+  )
+);
 
 app.post("/check-in", async (req, res) => {
   if (!req.body.courseID || !req.body.username) {
